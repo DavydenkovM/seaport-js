@@ -181,14 +181,15 @@ const offerAndConsiderationFulfillmentMapping: {
 export async function fulfillBasicOrder({
   order,
   seaportContract,
-  offererBalancesAndApprovals,
-  fulfillerBalancesAndApprovals,
+  // offererBalancesAndApprovals,
+  // fulfillerBalancesAndApprovals,
   timeBasedItemParams,
-  offererOperator,
-  fulfillerOperator,
+  // offererOperator,
+  // fulfillerOperator,
   signer,
   tips = [],
   conduitKey = NO_CONDUIT,
+  payableOverridesOptions = {},
 }: {
   order: Order;
   seaportContract: Seaport;
@@ -200,6 +201,7 @@ export async function fulfillBasicOrder({
   signer: providers.JsonRpcSigner;
   tips?: ConsiderationItem[];
   conduitKey: string;
+  payableOverridesOptions: any;
 }): Promise<
   OrderUseCase<
     ExchangeAction<
@@ -244,15 +246,15 @@ export async function fulfillBasicOrder({
     },
   })[ethers.constants.AddressZero]?.["0"];
 
-  const insufficientApprovals = validateBasicFulfillBalancesAndApprovals({
-    offer,
-    consideration: considerationIncludingTips,
-    offererBalancesAndApprovals,
-    fulfillerBalancesAndApprovals,
-    timeBasedItemParams,
-    offererOperator,
-    fulfillerOperator,
-  });
+  // const insufficientApprovals = validateBasicFulfillBalancesAndApprovals({
+  //   offer,
+  //   consideration: considerationIncludingTips,
+  //   offererBalancesAndApprovals,
+  //   fulfillerBalancesAndApprovals,
+  //   timeBasedItemParams,
+  //   offererOperator,
+  //   fulfillerOperator,
+  // });
 
   const basicOrderParameters: BasicOrderParametersStruct = {
     offerer: order.parameters.offerer,
@@ -280,12 +282,15 @@ export async function fulfillBasicOrder({
     zoneHash: order.parameters.zoneHash,
   };
 
-  const payableOverrides = { value: totalNativeAmount };
+  const payableOverrides = {
+    value: totalNativeAmount,
+    ...payableOverridesOptions,
+  };
 
-  const approvalActions = await getApprovalActions(
-    insufficientApprovals,
-    signer
-  );
+  // const approvalActions = await getApprovalActions(
+  //   insufficientApprovals,
+  //   signer
+  // );
 
   const exchangeAction = {
     type: "exchange",
@@ -296,7 +301,10 @@ export async function fulfillBasicOrder({
     ),
   } as const;
 
-  const actions = [...approvalActions, exchangeAction] as const;
+  const actions = [
+    // ...approvalActions,
+    exchangeAction,
+  ] as const;
 
   return {
     actions,
