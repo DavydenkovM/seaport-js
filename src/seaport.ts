@@ -595,7 +595,7 @@ export class Seaport {
     accountAddress?: string;
     conduitKey?: string;
     recipientAddress?: string;
-    payableOverridesOptions: any;
+    payableOverridesOptions?: any;
   }): Promise<
     OrderUseCase<
       ExchangeAction<
