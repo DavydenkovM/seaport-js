@@ -626,6 +626,7 @@ export class Seaport {
     accountAddress,
     conduitKey = this.defaultConduitKey,
     recipientAddress = ethers.constants.AddressZero,
+    payableOverridesOptions = {},
   }: {
     order: OrderWithCounter;
     unitsToFill?: BigNumberish;
@@ -636,6 +637,7 @@ export class Seaport {
     accountAddress?: string;
     conduitKey?: string;
     recipientAddress?: string;
+    payableOverridesOptions: any;
   }): Promise<
     OrderUseCase<
       ExchangeAction<
@@ -727,6 +729,7 @@ export class Seaport {
         fulfillerOperator,
         signer: fulfiller,
         tips: tipConsiderationItems,
+        payableOverridesOptions,
       });
     }
 
