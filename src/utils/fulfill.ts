@@ -3,7 +3,7 @@ import {
   BigNumberish,
   ContractTransaction,
   ethers,
-  providers,
+  Signer,
 } from "ethers";
 import type {
   Seaport as SeaportContract,
@@ -198,7 +198,7 @@ export async function fulfillBasicOrder({
   timeBasedItemParams: TimeBasedItemParams;
   offererOperator: string;
   fulfillerOperator: string;
-  signer: providers.JsonRpcSigner;
+  signer: Signer;
   tips?: ConsiderationItem[];
   conduitKey: string;
   payableOverridesOptions: any;
@@ -349,7 +349,7 @@ export async function fulfillStandardOrder({
   conduitKey: string;
   recipientAddress: string;
   timeBasedItemParams: TimeBasedItemParams;
-  signer: providers.JsonRpcSigner;
+  signer: Signer;
   payableOverridesOptions: any;
 }): Promise<
   OrderUseCase<
@@ -548,7 +548,7 @@ export async function fulfillAvailableOrders({
   currentBlockTimestamp: number;
   ascendingAmountTimestampBuffer: number;
   conduitKey: string;
-  signer: providers.JsonRpcSigner;
+  signer: Signer;
   recipientAddress: string;
 }): Promise<
   OrderUseCase<
