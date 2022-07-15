@@ -754,6 +754,7 @@ export class Seaport {
       offererOperator,
       fulfillerOperator,
       recipientAddress,
+      payableOverridesOptions,
     });
   }
 
