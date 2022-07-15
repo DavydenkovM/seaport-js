@@ -331,6 +331,7 @@ export async function fulfillStandardOrder({
   conduitKey,
   recipientAddress,
   signer,
+  payableOverridesOptions = {},
 }: {
   order: Order;
   unitsToFill?: BigNumberish;
@@ -349,6 +350,7 @@ export async function fulfillStandardOrder({
   recipientAddress: string;
   timeBasedItemParams: TimeBasedItemParams;
   signer: providers.JsonRpcSigner;
+  payableOverridesOptions: any;
 }): Promise<
   OrderUseCase<
     ExchangeAction<
@@ -361,6 +363,8 @@ export async function fulfillStandardOrder({
 > {
   // If we are supplying units to fill, we adjust the order by the minimum of the amount to fill and
   // the remaining order left to be fulfilled
+  console.log("FULFILL STANDARD ORDER");
+
   const orderWithAdjustedFills = unitsToFill
     ? mapOrderAmountsFromUnitsToFill(order, {
         unitsToFill,
@@ -408,24 +412,27 @@ export async function fulfillStandardOrder({
     },
   })[ethers.constants.AddressZero]?.["0"];
 
-  const insufficientApprovals = validateStandardFulfillBalancesAndApprovals({
-    offer,
-    consideration: considerationIncludingTips,
-    offerCriteria,
-    considerationCriteria,
-    offererBalancesAndApprovals,
-    fulfillerBalancesAndApprovals,
-    timeBasedItemParams,
-    offererOperator,
-    fulfillerOperator,
-  });
+  // const insufficientApprovals = validateStandardFulfillBalancesAndApprovals({
+  //   offer,
+  //   consideration: considerationIncludingTips,
+  //   offerCriteria,
+  //   considerationCriteria,
+  //   offererBalancesAndApprovals,
+  //   fulfillerBalancesAndApprovals,
+  //   timeBasedItemParams,
+  //   offererOperator,
+  //   fulfillerOperator,
+  // });
 
-  const payableOverrides = { value: totalNativeAmount };
+  const payableOverrides = {
+    value: totalNativeAmount,
+    ...payableOverridesOptions,
+  };
 
-  const approvalActions = await getApprovalActions(
-    insufficientApprovals,
-    signer
-  );
+  // const approvalActions = await getApprovalActions(
+  //   insufficientApprovals,
+  //   signer
+  // );
 
   const isGift = recipientAddress !== ethers.constants.AddressZero;
 
@@ -477,7 +484,10 @@ export async function fulfillStandardOrder({
         ]),
   } as const;
 
-  const actions = [...approvalActions, exchangeAction] as const;
+  const actions = [
+    // ...approvalActions,
+    exchangeAction,
+  ] as const;
 
   return {
     actions,
