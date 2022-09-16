@@ -568,32 +568,44 @@ export class Seaport {
           .join("")
     );
 
-    const derivedOrderHash = ethers.utils.keccak256(
-      "0x0" +
-        [
-          orderTypeHash.slice(2),
-          orderComponents.offerer.slice(2).padStart(64, "0"),
-          orderComponents.zone.slice(2).padStart(64, "0"),
-          offerHash.slice(2),
-          considerationHash.slice(2),
-          orderComponents.orderType.toString().padStart(64, "0"),
-          ethers.BigNumber.from(orderComponents.startTime)
-            .toHexString()
-            .slice(2)
-            .padStart(64, "0"),
-          ethers.BigNumber.from(orderComponents.endTime)
-            .toHexString()
-            .slice(2)
-            .padStart(64, "0"),
-          orderComponents.zoneHash.slice(2),
-          orderComponents.salt.slice(2).padStart(64, "0"),
-          orderComponents.conduitKey.slice(2).padStart(64, "0"),
-          ethers.BigNumber.from(orderComponents.counter)
-            .toHexString()
-            .slice(2)
-            .padStart(64, "0"),
-        ].join("")
-    );
+    let derivedOrderHash = "";
+    const payload = [
+      orderTypeHash.slice(2),
+      orderComponents.offerer.slice(2).padStart(64, "0"),
+      orderComponents.zone.slice(2).padStart(64, "0"),
+      offerHash.slice(2),
+      considerationHash.slice(2),
+      orderComponents.orderType.toString().padStart(64, "0"),
+      ethers.BigNumber.from(orderComponents.startTime)
+        .toHexString()
+        .slice(2)
+        .padStart(64, "0"),
+      ethers.BigNumber.from(orderComponents.endTime)
+        .toHexString()
+        .slice(2)
+        .padStart(64, "0"),
+      orderComponents.zoneHash.slice(2),
+      orderComponents.salt.slice(2).padStart(64, "0"),
+      orderComponents.conduitKey.slice(2).padStart(64, "0"),
+      ethers.BigNumber.from(orderComponents.counter)
+        .toHexString()
+        .slice(2)
+        .padStart(64, "0"),
+    ].join("");
+
+    try {
+      derivedOrderHash = ethers.utils.keccak256("0x" + payload);
+    } catch (e) {
+      console.log({ e });
+    }
+
+    if (!derivedOrderHash) {
+      try {
+        derivedOrderHash = ethers.utils.keccak256("0x0" + payload);
+      } catch (e) {
+        console.log({ e });
+      }
+    }
 
     return derivedOrderHash;
   };
