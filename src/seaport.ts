@@ -786,6 +786,7 @@ export class Seaport {
     accountAddress,
     conduitKey = this.defaultConduitKey,
     recipientAddress = ethers.constants.AddressZero,
+    payableOverridesOptions = {},
   }: {
     fulfillOrderDetails: {
       order: OrderWithCounter;
@@ -798,6 +799,7 @@ export class Seaport {
     accountAddress?: string;
     conduitKey?: string;
     recipientAddress?: string;
+    payableOverridesOptions?: any;
   }) {
     const fulfiller = this._getSigner(accountAddress);
 
@@ -887,6 +889,7 @@ export class Seaport {
       signer: fulfiller,
       conduitKey,
       recipientAddress,
+      payableOverridesOptions,
     });
   }
 

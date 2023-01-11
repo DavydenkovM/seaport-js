@@ -540,6 +540,7 @@ export async function fulfillAvailableOrders({
   conduitKey,
   signer,
   recipientAddress,
+  payableOverridesOptions = {},
 }: {
   ordersMetadata: FulfillOrdersMetadata;
   seaportContract: Seaport;
@@ -550,6 +551,7 @@ export async function fulfillAvailableOrders({
   conduitKey: string;
   signer: Signer;
   recipientAddress: string;
+  payableOverridesOptions: any;
 }): Promise<
   OrderUseCase<
     ExchangeAction<
@@ -670,7 +672,10 @@ export async function fulfillAvailableOrders({
     }
   );
 
-  const payableOverrides = { value: totalNativeAmount };
+  const payableOverrides = {
+    value: totalNativeAmount,
+    ...payableOverridesOptions,
+  };
 
   const approvalActions = await getApprovalActions(
     totalInsufficientApprovals,
