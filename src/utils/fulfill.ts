@@ -677,10 +677,10 @@ export async function fulfillAvailableOrders({
     ...payableOverridesOptions,
   };
 
-  const approvalActions = await getApprovalActions(
-    totalInsufficientApprovals,
-    signer
-  );
+  // const approvalActions = await getApprovalActions(
+  //   totalInsufficientApprovals,
+  //   signer
+  // );
 
   const advancedOrdersWithTips: AdvancedOrder[] = sanitizedOrdersMetadata.map(
     ({ order, unitsToFill = 0, tips, extraData }) => {
@@ -739,7 +739,10 @@ export async function fulfillAvailableOrders({
     ),
   } as const;
 
-  const actions = [...approvalActions, exchangeAction] as const;
+  const actions = [
+    // ...approvalActions,
+    exchangeAction,
+  ] as const;
 
   return {
     actions,
